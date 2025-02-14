@@ -4,12 +4,16 @@ itunes-export is a small python utlity script that allows to export your iTunes 
 In order to use this script, iTunes must store your Library into XML format. If you don't see an .xml library file in `~/Music/iTunes`, you probably started using iTunes after version 12.2, and have never enabled sharing between iTunes and other apps. To generate one, go to iTunes Preferences | Advanced and select "Share iTunes Library XML with other applications." ([Apple docs](https://support.apple.com/en-us/HT201610))
 
 This script is making use of the libpytunes library: https://github.com/liamks/libpytunes
+Install libpytunes and its dependencies first
+
+## Updated to python3 and added commandline switch to use relative paths in the .m3u files (disabled by default)
+The behaviour of the upstream is to use relative paths in the .m3u files. I didn't want this, but wanted to preserve it as an option
 
 ## Usage:
 ```bash
-python itunes-export.py --output "X:\Playlists" --ignore "Downloads"
+./itunes-export.py --output "./playlists" --ignore "Downloads" --library '/path/to/iTunes Music Library.xml'
 ```
-This command exports all your playlists except "Downloads" into the folder "X:\Playlists".
+This command exports all your playlists except "Downloads" into the folder "./playlists".
 
 Available commands:
 * **--output, -o:** mandatory, sets the folder to export to.
@@ -17,4 +21,5 @@ Available commands:
 * **--library, -l:** optional, explicitly provide the path to the iTunes XML library file. By default the one of the current user is used. 
 * **--export-genius-playlists:** optional, export genius playlists. By default they are not exported.
 * **--export-smart-playlists:** optional, export smart playlists. By default they are not exported.
+* **--relative:** optional, create the file paths in the playlists relative to the location of the library file
 * **--help, -h:** optional, get the command line help.

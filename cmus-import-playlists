@@ -1,0 +1,9 @@
+#!/bin/bash
+
+PLAYLIST_DIR=playlists
+
+ls -1 "$PLAYLIST_DIR/" | fgrep .m3u | while read playlist; do
+	echo cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
+	cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
+done
+
