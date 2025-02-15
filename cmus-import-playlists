@@ -1,11 +1,28 @@
 #!/bin/bash
 
+# script to import the iTunes playlists into cmus.
+# It assumes that there aren't already any playlists in cmus
+
 PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
 
 PLAYLIST_DIR=playlists
 
-ls -1 "$PLAYLIST_DIR/" | fgrep .m3u | while read playlist; do
-	echo cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
-	cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
-done
+# switch the playlist view so we can see what's happening
+echo cmus-remote -C \"view playlist\"
+cmus-remote -C "view playlist"
 
+ls -1 "$PLAYLIST_DIR/" | fgrep .m3u | while read playlist; do
+	echo cmus-remote -C \"pl-import $PWD/$PLAYLIST_DIR/$playlist\"
+	cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
+	# cmus will use the file name to name the playlist.
+	# So the playlists will all end in .m3u
+	# I tried renaming the files, but for some reason only about 5% of them imported and populated
+	# So now we select each newly imported playlist and rename it to remove .m3u
+	playlist_search_name=$(basename "$PWD/$PLAYLIST_DIR/$playlist")
+	playlist_new_name=$(basename "$playlist_search_name" .m3u)
+	# select the newly created playlist
+	cmus-remote -C "/$playlist_search_name"
+	# rename it without .m3u
+	echo cmus-remote -C \"pl-rename $playlist_new_name\"
+	cmus-remote -C "pl-rename $playlist_new_name"
+done

@@ -39,6 +39,8 @@ def exportPlaylist(playlist: Playlist, parentPath: Path):
                 exportPlaylist(childPlaylist, currentPath)
     else:
         playlistContent = ""
+        # cmus ignores the metadata tags so we skip them and get around renaming the playlist using script that calls cmus-remote
+        #playlistContent = f"#EXTM3U\n#PLAYLIST:{playlist.name}\n"
         for track in playlist.tracks:
             if args.relative:
                 if track.location != None:
