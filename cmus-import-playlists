@@ -5,8 +5,19 @@
 
 PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
 
+CMUS_PLAYLIST_DIR=/home/pstubbs/.config/cmus/playlists
 PLAYLIST_DIR=playlists
 FIRST_PLAYLIST=
+
+rm -f $CMUS_PLAYLIST_DIR/*
+
+for playlist in $PLAYLIST_DIR/*.m3u; do
+    playlist=$(basename "$playlist")
+    newName=$(echo $playlist | sed 's/\.m3u$//')
+    #echo mv "$PWD/PLAYLIST_DIR/$playlist" "~/.config/cmus/playlists/$newName"
+    mv -v "$PLAYLIST_DIR/$playlist" "$CMUS_PLAYLIST_DIR/$newName"
+done
+exit 0
 
 # switch the playlist view so we can see what's happening
 echo cmus-remote -C \"view playlist\"
