@@ -12,10 +12,10 @@ FIRST_PLAYLIST=
 rm -f $CMUS_PLAYLIST_DIR/*
 
 for playlist in $PLAYLIST_DIR/*.m3u; do
-    playlist=$(basename "$playlist")
-    newName=$(echo $playlist | sed 's/\.m3u$//')
-    #echo mv "$PWD/PLAYLIST_DIR/$playlist" "~/.config/cmus/playlists/$newName"
-    mv -v "$PLAYLIST_DIR/$playlist" "$CMUS_PLAYLIST_DIR/$newName"
+  playlist=$(basename "$playlist")
+  newName=$(echo $playlist | sed 's/\.m3u$//')
+  #echo mv "$PWD/PLAYLIST_DIR/$playlist" "~/.config/cmus/playlists/$newName"
+  mv -v "$PLAYLIST_DIR/$playlist" "$CMUS_PLAYLIST_DIR/$newName"
 done
 exit 0
 
@@ -24,26 +24,26 @@ echo cmus-remote -C \"view playlist\"
 cmus-remote -C "view playlist"
 
 while read playlist; do
-	echo cmus-remote -C \"pl-import $PWD/$PLAYLIST_DIR/$playlist\"
-	cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
-	# cmus will use the file name to name the playlist.
-	# So the playlists will all end in .m3u
-	# I tried renaming the files, but for some reason only about 5% of them imported and populated
-	# I also tried using "#PLAYLIST:" as per the standard at https://en.wikipedia.org/wiki/M3U
-	# But cmus ignores them
-	# So we search for each newly imported playlist and rename it to remove .m3u
-	playlist_search_name=$(basename "$PWD/$PLAYLIST_DIR/$playlist")
-	playlist_new_name=$(basename "$playlist_search_name" .m3u)
-	# seach for and select the newly created playlist
-	echo cmus-remote -C \"/$playlist_search_name\"
-	cmus-remote -C "/$playlist_search_name"
-	# rename it without .m3u
-	echo cmus-remote -C \"pl-rename $playlist_new_name\"
-	cmus-remote -C "pl-rename $playlist_new_name"
-	# save the first playlist to skip back to it when all others are imported
-	if [[ -z $FIRST_PLAYLIST ]]; then
-		FIRST_PLAYLIST=$playlist_new_name
-	fi
+  echo cmus-remote -C \"pl-import $PWD/$PLAYLIST_DIR/$playlist\"
+  cmus-remote -C "pl-import $PWD/$PLAYLIST_DIR/$playlist"
+  # cmus will use the file name to name the playlist.
+  # So the playlists will all end in .m3u
+  # I tried renaming the files, but for some reason only about 5% of them imported and populated
+  # I also tried using "#PLAYLIST:" as per the standard at https://en.wikipedia.org/wiki/M3U
+  # But cmus ignores them
+  # So we search for each newly imported playlist and rename it to remove .m3u
+  playlist_search_name=$(basename "$PWD/$PLAYLIST_DIR/$playlist")
+  playlist_new_name=$(basename "$playlist_search_name" .m3u)
+  # seach for and select the newly created playlist
+  echo cmus-remote -C \"/$playlist_search_name\"
+  cmus-remote -C "/$playlist_search_name"
+  # rename it without .m3u
+  echo cmus-remote -C \"pl-rename $playlist_new_name\"
+  cmus-remote -C "pl-rename $playlist_new_name"
+  # save the first playlist to skip back to it when all others are imported
+  if [[ -z $FIRST_PLAYLIST ]]; then
+    FIRST_PLAYLIST=$playlist_new_name
+  fi
 done < <(ls -1 "$PLAYLIST_DIR/" | fgrep .m3u)
 
 # skip back to the first created playlist
